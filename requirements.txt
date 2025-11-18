@@ -1,0 +1,6 @@
+pandas
+pathlib
+streamlit
+matplotlib
+openpyxl
+PIL
