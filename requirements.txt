@@ -3,4 +3,3 @@ pathlib
 streamlit
 openpyxl
 matplotlib
-PIL
