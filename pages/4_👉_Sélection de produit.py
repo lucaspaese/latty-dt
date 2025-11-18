@@ -42,10 +42,10 @@ st.sidebar.title("Séléction de produit")
 
 # produits = df.columns.tolist()
 
-nature_options = df["nature"].dropna().unique().tolist()
+nature_options = df["info_nature"].dropna().unique().tolist()
 nature_filter = st.sidebar.multiselect("Sélection par type de produit", nature_options, placeholder='Tous les types')
 
-mat1_options = df["matiere_1"].dropna().unique().tolist()
+mat1_options = df["info_matiere"].dropna().unique().tolist()
 mat1_filter = st.sidebar.multiselect("Sélection par matière", mat1_options, placeholder='Tous les matières')
 
 # comps = [
@@ -63,10 +63,10 @@ mat1_filter = st.sidebar.multiselect("Sélection par matière", mat1_options, pl
 filtered_df = df.copy()
 
 if nature_filter:
-    filtered_df = filtered_df[filtered_df["nature"].isin(nature_filter)]
+    filtered_df = filtered_df[filtered_df["info_nature"].isin(nature_filter)]
 
 if mat1_filter:
-    filtered_df = filtered_df[filtered_df["matiere_1"].isin(mat1_filter)]
+    filtered_df = filtered_df[filtered_df["info_matiere"].isin(mat1_filter)]
 
 col1,col2 = st.sidebar.columns(2)
 
@@ -93,7 +93,7 @@ if v_max:
 # if vcomp:
 #     filtered_df = filtered_df[filtered_df["param_Tenue en vitesse_max_m/s"] >= v_max]
 
-nombre_prod = filtered_df['nom'].count()
+nombre_prod = filtered_df['info_nom'].count()
 # st.dataframe(filtered_df)
 
 st.markdown(f"## {nombre_prod} produits trouvés")
@@ -180,7 +180,7 @@ for prod in produits_selectionnes:
             parts = idx.split("_")
             nom = parts[1]
             if nom not in param:
-                param[nom] = {"max": None, "min": None, "unite": None, "obs": None}
+                param[nom] = {"max": None, "min": None, "unite": None, "obs": None, "approx":None}
             if parts[2] in ('min', 'max'):
                 borne = parts[2]  # 'min' ou 'max'
                 unite = parts[3]
@@ -324,6 +324,11 @@ for prod in produits_selectionnes:
             max_val = float(valeurs["max"]) if pd.notna(valeurs["max"]) else None
         except ValueError:
             max_val = None
+
+        try:
+            approx_val = float(valeurs["approx"]) if pd.notna(valeurs["approx"]) else None
+        except ValueError:
+            approx_val = None
 
         try:
             obs = valeurs["obs"] if pd.notna(valeurs["obs"]) else None

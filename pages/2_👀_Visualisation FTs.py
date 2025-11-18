@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import os
 from PIL import Image
+from create_dfcomp import get_dict
 
 st.set_page_config(layout='wide',page_icon=':coffee:', page_title='DT Produits Latty')
 
@@ -99,19 +100,35 @@ else:
 
 donnees_produit = df[produit_selectionne].dropna()
 
-st.markdown(f"# :green[{donnees_produit.loc['nom']}]")
+st.markdown(f"# :green[{donnees_produit.loc['info_nom']}]")
 
-raw_date = str(donnees_produit.loc['date_maj'])
+raw_date = str(donnees_produit.loc['info_datemaj'])
 try:
     date_obj = pd.to_datetime(raw_date)
     formatted_date = date_obj.strftime("%d/%m/%Y")
 except:
     formatted_date = raw_date  # fallback if parsing fails
 
-st.caption(f"Fiche technique: {donnees_produit.loc['version_ft']} (dernière mise à jour : {formatted_date})")
-st.markdown(f"**<div style='text-align: justify; font-size: 1.0rem; color: #333; line-height:1.7rem'>{donnees_produit.loc['description']}</div>**", unsafe_allow_html=True)
+st.caption(f"Fiche technique: {donnees_produit.loc['info_versionft']} (dernière mise à jour : {formatted_date})")
+st.markdown(f"**<div style='text-align: justify; font-size: 1.0rem; color: #333; line-height:1.7rem'>{donnees_produit.loc['info_description']}</div>**", unsafe_allow_html=True)
 
 ## COMPOSITIONS
+
+def get_dict(df_prod,cle):
+    for idx, val in df_prod.items():
+        if idx.startswith(cle):
+            compositions = {}
+            parts = idx.split("_")
+            nom = parts[1]
+            borne = parts[2]  # 'min' ou 'max'
+            if nom not in compositions:
+                compositions[nom] = {"min": None, "max": None}
+            compositions[nom][borne] = val
+    return compositions
+
+# get_dict(donnees_produit,'comp')
+
+# st.write(get_dict)
 
 compositions = {}
 
