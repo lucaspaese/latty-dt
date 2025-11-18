@@ -11,3 +11,5 @@ chemin_bd = os.path.join(dossier_actuel, 'bd.xlsx')
 df = pd.read_excel(chemin_bd, index_col=0)
 
 st.dataframe(df, height=800)
+
+print("hello")
